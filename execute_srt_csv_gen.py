@@ -14,25 +14,15 @@ def execute():
 
     ######## Getting the input parameters
 
-    image_dir = helper.get_image_dir()
-    srt_dir = helper.get_srt_dir()
-    dist = helper.get_dist() # The permissive distance within which the images must be
-    output_file = helper.get_output_file_name(".csv")
 
+    image_dir = helper.get_input_dir("images")
+    srt_dir = helper.get_input_dir("SRTs")
+    dist = helper.get_dist() # The permissive distance within which the images must be
     
     ######## Generating the filtered CSV file
      
-    try:
-        generator_csv.generate_filtered_csv_at_path(srt_dir, image_dir, dist, output_file) # Generates the filtered CSV at the path
+    generator_csv.generate_filtered_csv_at_path(srt_dir, image_dir, dist) # Generates the filtered CSV at the path
 
-    except FileNotFoundError:
-        logging.error("CSV file " + output_file +
-                     " does not exist please create the file, and then re-execute the script.")
-        exit()
-
-    except IsADirectoryError:
-        logging.error("File" + output_file + " is a directory")
-        exit()
 
 
 

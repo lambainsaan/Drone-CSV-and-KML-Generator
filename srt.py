@@ -3,8 +3,7 @@ This module contains functions to read and parse the srt file for cordinates.
 """
 
 
-
-def path_from_srt_files(srt_file_path):
+def path_from_srt_file(srt_file):
     """Reads all the srt files in the path and returns the latitude and longitude of the path of the drone as a list 
     
     Arguments:
@@ -18,35 +17,27 @@ def path_from_srt_files(srt_file_path):
 
     import helper
     
-    try:
-        srt_files = helper.get_files_from_folder(srt_file_path, '.srt')
-    except FileNotFoundError:
-        logging.error("Could not find the Directory: " + srt_file_path)
-
     path = []
 
     # for every srt file open it and
     # for every subtitle in subtitles
     # append the cordinate to the path
-    for srt_file in srt_files:
-    
-        subts = pysrt.open(srt_file_path + '/' + srt_file if not srt_file_path.endswith('/') else srt_file_path + srt_file)
-    
-        for subt in subts:
-    
+    try:
+        for subt in pysrt.open(srt_file):
             try:
                 lon_lat = get_lat_longitude(subt.text)
             except ValueError:
                 logging.info(srt_file + " file contains subtitle in incorrect form.")
                 continue
-    
+
             if not helper.is_lon_lat(lon_lat[0], lon_lat[1]):
                 logging.info(
                     srt_file + " file contains lon lat out of bounds.")
                 continue
-
             path.append(lon_lat)
-
+    except FileNotFoundError:
+        logging.error(srt_file + " does not exist.")
+        
     return path
 
 

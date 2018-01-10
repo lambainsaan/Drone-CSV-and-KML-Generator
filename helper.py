@@ -62,6 +62,46 @@ def is_lon_lat(lon, lat):
     return False 
 
 
+def set_logging(logging):
+    """Helper function to set up the logger.
+    """
+
+    # set up logging to file - see previous section for more details
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                        datefmt='%m-%d %H:%M',
+                        filename='logs.log',
+                        filemode='w')
+
+    # define a Handler which writes INFO messages or higher to the sys.stderr
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+
+    # set a format which is simpler for console use
+    formatter = logging.Formatter(
+        '%(name)-12s: %(levelname)-8s %(message)s')
+
+    # tell the handler to use this format
+    console.setFormatter(formatter)
+
+    # add the handler to the root logger
+    logging.getLogger('').addHandler(console)
+
+
+def convert_subriptime_to_seconds(obj):
+    """Returns the second representation of the subriptime object
+    
+    Arguments:
+        obj {SubRipTime} -- with 0 milliseconds 
+    
+    Returns:
+        int -- converting the hh mm ss to seconds
+    """
+
+    return 3600 * obj.hours + 60 * obj.minutes + obj.seconds
+
+
+
 ############
 #
 # Accessor Functions with necesary error checking in the user input.
@@ -98,62 +138,42 @@ def get_output_file_name(ext):
     import logging
     output_file = input("Enter the " + ext.upper() + " file name to process the output in: ")
 
-    # If the file does not end with .csv extension generate error.
     if not output_file.lower().endswith(ext):
         logging.error("The file must end with " + ext + " extension")
         exit()
 
     return output_file
 
+def get_input_file_name(ext):
+    """Accessor function to get the file name of the input file the user wants the program read the data from.  
 
-def get_input_csv_dir():
+    Arguments:
+        ext [String] -- the extension of the file 
+
+    Returns:
+        string -- the name of the CSV file user wants the program to read from.
+    """
+    import logging
+    
+    input_file = input("Enter the " + ext.upper() + " file name to parse the input from: ")
+
+    if not input_file.lower().endswith(ext):
+        logging.error("The file must end with " + ext + " extension")
+        exit()
+
+    return input_file
+
+
+def get_input_dir(ext):
     """Accessor function to get the file name of the csv file the user wants to put fetch the csv data from.  
     
     Returns:
         string -- the name of the CSV file user wants to read from
     """
-    csv_dir = input("Enter the relative path of the directory containing CSV input files: ")
-
-    return validate_dir(csv_dir)
-
-
-
-def get_image_dir():
-    """Gets the image directory from the user
-    
-    Returns:
-        String -- The name of the directory that user inputs
-    """
-    image_dir = input(
-        "Enter the relative path of the directory containing images: ")
-    
-    return validate_dir(image_dir)
-
-
-
-def get_srt_dir():
-    """Gets the image directory from the user
-    
-    Returns:
-        String -- The name of the directory that user inputs
-    """
-    srt_dir = input("Enter the path to srt files: ")
-    
-    return validate_dir(srt_dir)
-
-
-
-def validate_dir(path):
-    """ Validates if the path is a directory, returns path if path is valid.
-
-    Arguments:
-        path {String} -- The path that has to be validated, for being a directory.
-
-    Returns:
-        String -- The path to the directory if the directory is existant.
-    """
     import logging
     import os
+
+    path = input("Enter the relative path of the directory containing %s: " %ext)
 
     if os.path.isdir(path):
         return path
@@ -162,45 +182,4 @@ def validate_dir(path):
         exit()
 
 
-def validate_file(file_name):
-    """ Validates if the file_name is a file, returns path of file if it file_name is valid file.
 
-    Arguments:
-        file_name {String} -- The path that has to be validated, for being a file.
-
-    Returns:
-        String -- The path to the file if the file is existant.
-    """
-    import logging
-    import os
-
-    if os.path.exists(file_name):
-        return file_name
-    else:
-        logging.error(file_name + " is not an existing file.")
-        exit()
-
-def set_logging(logging):
-    """Helper function to set up the logger.
-    """
-
-    # set up logging to file - see previous section for more details
-    logging.basicConfig(level=logging.DEBUG,
-                        format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-                        datefmt='%m-%d %H:%M',
-                        filename='logs.log',
-                        filemode='w')
-
-    # define a Handler which writes INFO messages or higher to the sys.stderr
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-
-    # set a format which is simpler for console use
-    formatter = logging.Formatter(
-        '%(name)-12s: %(levelname)-8s %(message)s')
-
-    # tell the handler to use this format
-    console.setFormatter(formatter)
-
-    # add the handler to the root logger
-    logging.getLogger('').addHandler(console)

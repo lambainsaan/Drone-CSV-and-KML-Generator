@@ -12,7 +12,7 @@ def generate_filtered_csv_for_pois(input_dir, dist, image_dir, output_file):
     Arguments:
         file_name {String} -- The name of the csv file to be read.
     """
-
+    import logging
     # The dict with the images name and their latitude and longitude
     images_lon_lat_dict = lat_lon.lat_lon_of_images(image_dir)
 
@@ -20,10 +20,11 @@ def generate_filtered_csv_for_pois(input_dir, dist, image_dir, output_file):
     all_images = images_lon_lat_dict.keys()
 
     ########### Writing filtered image for every Point of Interest (POIs) to the CSV file
-
-    with open(output_file, 'w', newline='') as csv_output_file:
-        read_csv_files_and_add_images_for_every_poi(input_dir, dist, csv_output_file, all_images, images_lon_lat_dict)
-
+    try:
+        with open(output_file, 'w', newline='') as csv_output_file:
+            read_csv_files_and_add_images_for_every_poi(input_dir, dist, csv_output_file, all_images, images_lon_lat_dict)
+    except FileNotFoundError:
+        logging.error(output_file + " does not exist.")
 
 
 
@@ -50,7 +51,7 @@ def read_csv_files_and_add_images_for_every_poi(input_dir, dist, csv_output_file
     for file_name in helper.get_files_from_folder(input_dir, '.csv'):
         
         with open(file_name, newline='') as csv_reading_file:
-
+            
             csv_reader = csv.reader(csv_reading_file, delimiter=',')
             
             # For every line in csv input file 
@@ -71,9 +72,7 @@ def read_csv_files_and_add_images_for_every_poi(input_dir, dist, csv_output_file
 
                 write_filtered_images_to_csv(csv_writer, row, filtered_images)
         
-
-
-
+    
 def write_filtered_images_to_csv(csv_writer, row, filtered_images):
     """ Writes the filtered images to csv file
     

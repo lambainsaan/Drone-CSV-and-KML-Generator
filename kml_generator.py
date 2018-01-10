@@ -18,9 +18,9 @@ def execute():
 
     kml_file = helper.get_output_file_name(".kml")
 
-    srt_dir = helper.get_srt_dir() 
+    srt_file = helper.get_input_file_name(".srt") 
 
-    path = srt.path_from_srt_files(srt_dir)
+    path = srt.path_from_srt_file(srt_file)
 
 
     ########## Generating the KML document

@@ -16,25 +16,14 @@ def execute():
 
     ########## Getting user input
 
-    image_dir = helper.get_image_dir()
-    input_dir = helper.get_input_csv_dir()
+    image_dir = helper.get_input_dir("images")
+    csv_dir = helper.get_input_dir("CSVs")
     dist = helper.get_dist()
     output_file = helper.get_output_file_name(".csv")
 
     ########## Generating the filtered CSV for the Point of Interest (POIs)
     
-    try:
-        poi_scanner.generate_filtered_csv_for_pois(
-            input_dir, dist, image_dir, output_file)
-
-    except FileNotFoundError:
-        logging.error("CSV file " + output_file +
-                      " does not exist please create the file, and then re-execute the script.")
-        exit()
-
-    except IsADirectoryError:
-        logging.error("File" + output_file + " is a directory")
-        exit()
-
+    poi_scanner.generate_filtered_csv_for_pois(
+        csv_dir, dist, image_dir, output_file)
 
 execute()
