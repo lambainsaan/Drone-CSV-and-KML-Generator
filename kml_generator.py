@@ -1,4 +1,8 @@
+""" This module contains functions to generate KML file for the path of the drone.
+"""
+
 import xml
+
 from fastkml import kml
 from shapely.geometry import Point
 
@@ -40,7 +44,7 @@ def execute():
             kml_file.write(k.to_string())
     except FileNotFoundError:
         # If file not found.
-        print("File not found please create the file and then rexecute the script.")
+        print("File " + kml_file + " not found please create the file and then rexecute the script.")
         exit()
 
 execute()

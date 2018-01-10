@@ -79,7 +79,7 @@ def get_dist():
     import logging
     try:
         return float(input(
-            "Enter the distance you want the images to be within in the CSV file (float or int): "))
+            "Enter the distance you want the images to be within (must be a float or int): "))
     except ValueError:
         logging.error("Enter a float or integer value.")
         exit()
@@ -112,7 +112,7 @@ def get_input_csv_dir():
     Returns:
         string -- the name of the CSV file user wants to read from
     """
-    csv_dir = input("Enter the name of the directory that contains CSV input files : ")
+    csv_dir = input("Enter the relative path of the directory containing CSV input files: ")
 
     return validate_dir(csv_dir)
 
@@ -124,7 +124,8 @@ def get_image_dir():
     Returns:
         String -- The name of the directory that user inputs
     """
-    image_dir = input("Enter the path to images :")
+    image_dir = input(
+        "Enter the relative path of the directory containing images: ")
     
     return validate_dir(image_dir)
 
@@ -136,7 +137,7 @@ def get_srt_dir():
     Returns:
         String -- The name of the directory that user inputs
     """
-    srt_dir = input("Enter the path to srt files :")
+    srt_dir = input("Enter the path to srt files: ")
     
     return validate_dir(srt_dir)
 
@@ -178,3 +179,28 @@ def validate_file(file_name):
     else:
         logging.error(file_name + " is not an existing file.")
         exit()
+
+def set_logging(logging):
+    """Helper function to set up the logger.
+    """
+
+    # set up logging to file - see previous section for more details
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                        datefmt='%m-%d %H:%M',
+                        filename='logs.log',
+                        filemode='w')
+
+    # define a Handler which writes INFO messages or higher to the sys.stderr
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+
+    # set a format which is simpler for console use
+    formatter = logging.Formatter(
+        '%(name)-12s: %(levelname)-8s %(message)s')
+
+    # tell the handler to use this format
+    console.setFormatter(formatter)
+
+    # add the handler to the root logger
+    logging.getLogger('').addHandler(console)
