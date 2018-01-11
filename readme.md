@@ -1,6 +1,8 @@
 # SKYLARK Assignment
 
-Clone the repo and cd into Drone-CSV-and-KML-Generator/
+Output of the code for provided files is in the "solution files" folder.
+
+To execute the code, clone the repo and cd into Drone-CSV-and-KML-Generator/code
 
 To execute the scripts you must have  
     
